@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:petshop/data/product_data.dart';
 import 'package:petshop/view/product_detail.dart';
+import 'package:petshop/view/search.dart';
+import 'package:petshop/view/notification.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,8 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _activeCategory = 'Food'; 
-  int _selectedIndex = 0; 
+  String _activeCategory = 'Food';
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +92,10 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Search button pressed')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SearchPage()),
                         );
                       },
                       child: Padding(
@@ -105,9 +109,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text('Notification button pressed')),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NotificationPage()),
                         );
                       },
                       child: Padding(
