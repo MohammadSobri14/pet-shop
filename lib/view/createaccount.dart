@@ -16,8 +16,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   bool _isEmailValid = false;
   bool _isPasswordValid = false;
   bool _isFullNameValid = false;
-  bool _isPasswordObscured = true; // Menyembunyikan password secara default
-  bool _isAgreed = false; // Status checkbox setuju dengan syarat
+  bool _isPasswordObscured = true;
+  bool _isAgreed = false;
 
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();

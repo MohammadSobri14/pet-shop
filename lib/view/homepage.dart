@@ -10,8 +10,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _activeCategory = 'Food'; // Status tombol aktif
-  int _selectedIndex = 0; // Menyimpan indeks tab yang aktif
+  String _activeCategory = 'Food'; 
+  int _selectedIndex = 0; 
 
   @override
   Widget build(BuildContext context) {
