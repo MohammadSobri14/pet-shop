@@ -35,7 +35,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
 // Ganti dengan IP lokal komputer Anda sesuai sama jaringan yang dipakai
   Future<void> _createAccount() async {
+    // Wifi Kos
     const String apiUrl = "http://192.168.18.200:5000/register";
+    // Wifi Unjaya
+  // final String apiUrl = "http://172.16.13.157:5000/register";
 
     try {
       final response = await http.post(
