@@ -37,6 +37,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Future<void> _createAccount() async {
     // Wifi Kos
     const String apiUrl = "http://192.168.18.200:5000/register";
+    // const String apiUrl = "http://127.0.0.1:5000/register";
     // Wifi Unjaya
   // final String apiUrl = "http://172.16.13.157:5000/register";
 

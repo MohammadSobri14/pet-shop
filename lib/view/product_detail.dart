@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 
-class ProductDetailPage extends StatelessWidget {
+class ProductDetailPage extends StatefulWidget {
   final String title;
   final String price;
   final String image;
-  final VoidCallback onAddToCart; // Callback untuk menambahkan ke keranjang
+  final VoidCallback onAddToCart;
 
   const ProductDetailPage({
     super.key,
     required this.title,
     required this.price,
     required this.image,
-    required this.onAddToCart, // Tambahkan parameter ini
+    required this.onAddToCart,
   });
+
+  @override
+  State<ProductDetailPage> createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState extends State<ProductDetailPage> {
+  bool isFavorite = false; // Status awal favorit
+  int quantity = 1; // Jumlah awal produk
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +28,36 @@ class ProductDetailPage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Stack(
         children: [
-          // Header dengan Title
+          // Header dengan Title dan Logo Heart
           Positioned(
-            left: 133,
+            left: 134,
             top: 72,
-            child: Text(
-              'Product Detail',
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 15,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w700,
-              ),
+            child: Row(
+              children: [
+                Text(
+                  'Product Detail',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontFamily: 'Poppins',
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(width: 78),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isFavorite = !isFavorite; // Toggle status favorit
+                    });
+                  },
+                  child: Icon(
+                    Icons.favorite,
+                    color: isFavorite ? Colors.red : Colors.grey,
+                    size: 24,
+                  ),
+                ),
+              ],
             ),
           ),
 
@@ -50,8 +75,8 @@ class ProductDetailPage extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  shadows: [
-                    const BoxShadow(
+                  shadows: const [
+                    BoxShadow(
                       color: Color(0x11000000),
                       blurRadius: 20,
                       offset: Offset(4, 4),
@@ -80,7 +105,7 @@ class ProductDetailPage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(24),
                 child: Image.asset(
-                  image,
+                  widget.image,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -92,7 +117,7 @@ class ProductDetailPage extends StatelessWidget {
             left: 24,
             top: 465,
             child: Text(
-              title,
+              widget.title,
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 16,
@@ -107,48 +132,100 @@ class ProductDetailPage extends StatelessWidget {
             left: 24,
             top: 499,
             child: SizedBox(
-              width: 327,
-              child: const Text(
-                'The Persian cat has the longest and densest coat of all cat breeds. '
-                'This means that it typically needs to consume more skin-health focused nutrients '
-                'than other cat breeds. That’s why ROYAL CANIN® Persian Adult contains an exclusive complex '
-                'of nutrients to help the skin’s barrier defence role to maintain good skin and coat health.',
+              width: 320,
+              child: Text(
+                'The Persian cat has the longest and densest coat of all cat breeds. This means that it typically needs to consume more skin-health focused nutrients than other cat breeds. That’s why ROYAL CANIN® Persian Adult contains an exclusive complex of nutrients to help the skin’s barrier defence role to maintain good skin and coat health.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   color: Color(0xFFB3B1B0),
                   fontSize: 12,
                   fontFamily: 'Poppins',
                   fontWeight: FontWeight.w400,
+                  height: 1.60,
                 ),
               ),
             ),
           ),
 
-          // Harga Produk
+          // Harga Produk dengan tombol plus dan minus
           Positioned(
-            left: 237,
+            left: 24,
             top: 654,
-            child: Text(
-              price,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 24,
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.w600,
-              ),
+            child: Row(
+              mainAxisSize:
+                  MainAxisSize.min, // Agar Row menyesuaikan ukuran anak-anaknya
+              children: [
+                // Tombol Minus
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (quantity > 1)
+                        quantity--; // Kurangi quantity jika lebih dari 1
+                    });
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[200],
+                    ),
+                    child: const Icon(Icons.remove, color: Colors.black),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Jumlah Produk
+                Text(
+                  '$quantity',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 8),
+
+                // Tombol Plus
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      quantity++; // Tambah quantity
+                    });
+                  },
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.grey[200],
+                    ),
+                    child: const Icon(Icons.add, color: Colors.black),
+                  ),
+                ),
+                const SizedBox(width: 110),
+                // Harga Produk
+                Text(
+                  widget.price,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
 
-          // Tombol Tambah ke Keranjang ```dart
+          // Tombol Tambah ke Keranjang
           Positioned(
             left: 24,
-            top: 728,
+            top: 710,
             child: GestureDetector(
               onTap: () {
-                onAddToCart(); // Panggil callback saat tombol ditekan
+                widget.onAddToCart(); // Panggil callback saat tombol ditekan
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text("$title added to cart!"),
+                    content: Text("${widget.title} added to cart!"),
                   ),
                 );
               },

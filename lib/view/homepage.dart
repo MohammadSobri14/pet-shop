@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:petshop/data/product_data.dart';
 import 'package:petshop/models/product_model.dart';
 import 'package:petshop/view/cart.dart';
+import 'package:petshop/view/konsultasi.dart';
 import 'package:petshop/view/product_detail.dart';
+import 'package:petshop/view/profile.dart';
 import 'package:petshop/view/search.dart';
 import 'package:petshop/view/notification.dart';
 import 'package:petshop/view/bestseller.dart';
+import 'package:petshop/view/settings.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -107,12 +110,10 @@ class _HomePageState extends State<HomePage> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 20, right: 16.0),
-            child: Image.asset(
-              'assets/images/search.png',
-              width: 24,
-              height: 24,
-            ),
+            padding: const EdgeInsets.only(top: 20, right: 10),
+            child: Icon(Icons.search, // Menggunakan icon search
+                size: 24,
+                color: Colors.grey),
           ),
         ),
         GestureDetector(
@@ -123,12 +124,22 @@ class _HomePageState extends State<HomePage> {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Image.asset(
-              'assets/images/notification.png',
-              width: 24,
-              height: 24,
-            ),
+            padding: const EdgeInsets.only(top: 20, left: 5, right: 10),
+            child: Icon(Icons.notifications, // Menggunakan icon lonceng
+                size: 24,
+                color: Colors.grey),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Settings()),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(top: 20, left: 5, right: 5),
+            child: Icon(Icons.settings, size: 24, color: Colors.grey),
           ),
         ),
       ],
@@ -387,14 +398,44 @@ class _HomePageState extends State<HomePage> {
           _selectedIndex = index;
         });
         if (index == 1) {
+          // Navigasi ke halaman Cart
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Cart(
+                  cartItems: cartItems,
+                  userId: 15), // Ganti dengan ID pengguna yang sesuai
+            ),
+          ).then((_) {
+            // Set _selectedIndex kembali ke 0 (Home) saat kembali dari Cart
+            setState(() {
+              _selectedIndex = 0;
+            });
+          });
+        } else if (index == 2) {
+          // Navigasi ke halaman Profile
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  Cart(cartItems: cartItems), // Kirim data keranjang ke Cart
+                  Konsultasi(), // Ganti dengan nama kelas yang sesuai di profile.dart
             ),
           ).then((_) {
-            // Set _selectedIndex kembali ke 0 (Home) saat kembali dari Cart
+            // Set _selectedIndex kembali ke 0 (Home) saat kembali dari Profile
+            setState(() {
+              _selectedIndex = 0;
+            });
+          });
+        } else if (index == 3) {
+          // Navigasi ke halaman Profile
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  Profile(), // Ganti dengan nama kelas yang sesuai di profile.dart
+            ),
+          ).then((_) {
+            // Set _selectedIndex kembali ke 0 (Home) saat kembali dari Profile
             setState(() {
               _selectedIndex = 0;
             });
@@ -439,12 +480,12 @@ class _HomePageState extends State<HomePage> {
         BottomNavigationBarItem(
           icon: _selectedIndex == 2
               ? Image.asset(
-                  'assets/images/settings_selected.png',
+                  'assets/images/konsultasi_selected.png',
                   width: 24,
                   height: 24,
                 )
               : Image.asset(
-                  'assets/images/settings.png',
+                  'assets/images/konsultasi.png',
                   width: 24,
                   height: 24,
                 ),

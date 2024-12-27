@@ -35,6 +35,7 @@ class _LoginState extends State<Login> {
   // Ganti dengan IP lokal komputer Anda sesuai sama jaringan yang dipakai
   // Wifi Kos
   final String apiUrl = "http://192.168.18.200:5000/login";
+  // final String apiUrl = "http://127.0.0.1:5000/login";
   // Wifi Unjaya
   // final String apiUrl = "http://172.16.13.157:5000/login";
 
