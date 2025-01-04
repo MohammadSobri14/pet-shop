@@ -4,6 +4,7 @@ import 'package:petshop/view/createaccount.dart';
 import 'package:petshop/view/homepage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -58,6 +59,12 @@ class _LoginState extends State<Login> {
 
         // Jika login berhasil, navigasikan ke HomePage
         if (responseData['status'] == 'success') {
+          final token = responseData['token'];
+        // Simpan token JWT untuk penggunaan selanjutnya
+        // Contoh menggunakan SharedPreferences:
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('token', token);
+        
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => HomePage()),

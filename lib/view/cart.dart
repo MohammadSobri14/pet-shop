@@ -5,8 +5,8 @@ import 'package:petshop/view/konsultasi.dart';
 import 'package:petshop/view/payment_method.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:petshop/view/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Cart extends StatefulWidget {
   final List<Product> cartItems; // Mengambil cartItems yang dikirimkan
@@ -20,6 +20,45 @@ class Cart extends StatefulWidget {
 
 class _CartState extends State<Cart> {
   int _selectedIndex = 1;
+
+  // Fungsi untuk menyimpan data keranjang ke SharedPreferences
+  Future<void> saveCartToLocalStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String> cartData = widget.cartItems
+        .map((item) => json.encode({
+              'title': item.title,
+              'price': item.price,
+              'image': item.image,
+            }))
+        .toList();
+    await prefs.setStringList('cart_${widget.userId}', cartData);
+  }
+
+// Fungsi untuk memuat data keranjang dari SharedPreferences
+  Future<void> loadCartFromLocalStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    List<String>? cartData = prefs.getStringList('cart_${widget.userId}');
+    if (cartData != null) {
+      setState(() {
+        widget.cartItems.clear();
+        widget.cartItems.addAll(cartData.map((item) {
+          Map<String, dynamic> data = json.decode(item);
+          return Product(
+            title: data['title'],
+            price: data['price'],
+            image: data['image'],
+          );
+        }).toList());
+      });
+    }
+  }
+
+// Fungsi untuk menghapus data keranjang dari SharedPreferences
+  Future<void> clearCartFromLocalStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('cart_${widget.userId}');
+  }
+
   @override
   Widget build(BuildContext context) {
     // Menghitung total harga
@@ -49,11 +88,11 @@ class _CartState extends State<Cart> {
                         subtitle: Text(product.price),
                         trailing: IconButton(
                           icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            // Hapus produk dari cartItems
+                          onPressed: () async {
                             setState(() {
                               widget.cartItems.removeAt(index);
                             });
+                            await saveCartToLocalStorage(); // Simpan perubahan ke lokal storage
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content:
@@ -106,15 +145,16 @@ class _CartState extends State<Cart> {
                         borderRadius: BorderRadius.circular(30.0),
                       ),
                     ),
-                    onPressed: () {
-                      // Melakukan checkout
-                      checkout(widget
-                          .userId); // Ganti dengan ID pengguna yang sesuai
+                    onPressed: () async {
+                      await checkout(widget.userId);
+                      await clearCartFromLocalStorage(); // Hapus data keranjang setelah checkout
+                      setState(() {
+                        widget.cartItems.clear();
+                      });
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                PaymentMethod()), // Ganti dengan halaman PaymentMethod
+                            builder: (context) => PaymentMethod()),
                       );
                     },
                     child: Text(
@@ -130,9 +170,10 @@ class _CartState extends State<Cart> {
                 ),
               ],
             ),
-            bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
+
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
       type:

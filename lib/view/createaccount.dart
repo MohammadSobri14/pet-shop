@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:petshop/view/homepage.dart';
+// import 'package:petshop/view/homepage.dart';
 import 'package:petshop/view/login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -39,7 +39,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     const String apiUrl = "http://192.168.18.200:5000/register";
     // const String apiUrl = "http://127.0.0.1:5000/register";
     // Wifi Unjaya
-  // final String apiUrl = "http://172.16.13.157:5000/register";
+    // final String apiUrl = "http://172.16.13.157:5000/register";
 
     try {
       final response = await http.post(
@@ -52,34 +52,36 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         }),
       );
 
-      if (response.statusCode == 200) {
-        final responseBody = json.decode(response.body);
-        if (responseBody['status'] == 'success') {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Account created successfully!')),
-          );
-          // Navigasi ke halaman login atau homepage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(responseBody['message'])),
-          );
-        }
-      } else {
+      final responseData = jsonDecode(response.body);
+      if (response.statusCode == 200 && responseData['status'] == 'success') {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-                  Text('Failed to create account: ${response.statusCode}')),
+          SnackBar(content: Text(responseData['message'])),
         );
+        Navigator.pop(context); // Kembali ke halaman login
+      } else {
+        _showErrorDialog(responseData['message']);
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
-      );
+      _showErrorDialog("An error occurred. Please try again later.");
     }
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Error'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:petshop/view/component.dart';
+import 'package:petshop/data/component.dart';
 import 'package:petshop/view/login.dart';
 import 'package:petshop/view/onboarding_items.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
