@@ -289,50 +289,49 @@ class _HomePageState extends State<HomePage> {
     return Container(
       width: 327,
       height: 29,
-      child: Stack(
-        children: [
-          Positioned(
-            left: 0,
-            top: 6,
-            child: Text(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Bestseller()),
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
               'Best Seller',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 16,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w700,
-                height: 0.11,
+                height: 1.5, // Mengatur tinggi teks agar proporsional
               ),
             ),
-          ),
-          Positioned(
-            left: 263,
-            top: 10,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Bestseller()),
-                );
-              },
-              child: Text(
-                'View All',
-                style: TextStyle(
-                  color: const Color(0xFF7140FC),
-                  fontSize: 12,
-                  fontFamily: 'Poppins',
-                  fontWeight: FontWeight.w500,
-                  height: 0.13,
-                ),
+            Text(
+              'View All',
+              style: TextStyle(
+                color: const Color(0xFF7140FC),
+                fontSize: 12,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+                height: 1.5, // Mengatur tinggi teks agar proporsional
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildProductGrid() {
+    // Filter produk berdasarkan kategori aktif
+    final filteredProducts = products.where((product) {
+      return product.category == _activeCategory;
+    }).toList();
+
     return Expanded(
       child: SingleChildScrollView(
         child: GridView.builder(
@@ -345,9 +344,9 @@ class _HomePageState extends State<HomePage> {
             mainAxisSpacing: 10,
             childAspectRatio: 0.75,
           ),
-          itemCount: products.length,
+          itemCount: filteredProducts.length,
           itemBuilder: (context, index) {
-            final product = products[index];
+            final product = filteredProducts[index];
             return GestureDetector(
               onTap: () {
                 Navigator.push(

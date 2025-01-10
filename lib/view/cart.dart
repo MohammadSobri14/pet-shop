@@ -47,6 +47,7 @@ class _CartState extends State<Cart> {
             title: data['title'],
             price: data['price'],
             image: data['image'],
+            category: data['category'],
           );
         }).toList());
       });
